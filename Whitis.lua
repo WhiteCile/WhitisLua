@@ -1,6 +1,42 @@
+------------------
+-- Auto Updater --
+------------------
+
+-- Auto Updater from https://github.com/hexarobi/stand-lua-auto-updater
+local status, auto_updater = pcall(require, "auto-updater")
+if not status then
+    local auto_update_complete = nil util.toast("Installing auto-updater...", TOAST_ALL)
+    async_http.init("raw.githubusercontent.com", "/hexarobi/stand-lua-auto-updater/main/auto-updater.lua",
+        function(result, headers, status_code)
+            local function parse_auto_update_result(result, headers, status_code)
+                local error_prefix = "Error downloading auto-updater: "
+                if status_code ~= 200 then util.toast(error_prefix..status_code, TOAST_ALL) return false end
+                if not result or result == "" then util.toast(error_prefix.."Found empty file.", TOAST_ALL) return false end
+                filesystem.mkdir(filesystem.scripts_dir() .. "lib")
+                local file = io.open(filesystem.scripts_dir() .. "lib\\auto-updater.lua", "wb")
+                if file == nil then util.toast(error_prefix.."Could not open file for writing.", TOAST_ALL) return false end
+                file:write(result) file:close() util.toast("Successfully installed auto-updater lib", TOAST_ALL) return true
+            end
+            auto_update_complete = parse_auto_update_result(result, headers, status_code)
+        end, function() util.toast("Error downloading auto-updater lib. Update failed to download.", TOAST_ALL) end)
+    async_http.dispatch() local i = 1 while (auto_update_complete == nil and i < 40) do util.yield(250) i = i + 1 end
+    if auto_update_complete == nil then error("Error downloading auto-updater lib. HTTP Request timeout") end
+    auto_updater = require("auto-updater")
+end
+if auto_updater == true then error("Invalid auto-updater lib. Please delete your Stand/Lua Scripts/lib/auto-updater.lua and try again") end
+
+auto_updater.run_auto_update({
+    source_url="" -- Add GitHub Repo :3
+    script_relpath=SCRIPT_RELPATH,
+    verify_file_begins_with="--"
+})
+auto_updater.run_auto_update(auto_update_config)
+
+
 -----------
 -- Start --
 -----------
+
 util.keep_running()
 util.require_natives("natives-1663599433")
 
@@ -35,48 +71,48 @@ menu.action(Credits, "Lobby Crasher", {}, "Bec they Fill the Blacklist :)", func
 -----------------
 -- Jinx Script --
 -----------------
-
-local DF_StopForCars					= 1,
-local DF_StopForPeds					= 2,
-local DF_SwerveAroundAllCars			= 4,
-local DF_SteerAroundStationaryCars	= 8,
-local DF_SteerAroundPeds				= 16,
-local DF_SteerAroundObjects			= 32,
-local DF_DontSteerAroundPlayerPed		= 64,
-local DF_StopAtLights					= 128,
-local DF_GoOffRoadWhenAvoiding		= 256,
-local DF_DriveIntoOncomingTraffic		= 512,
-local DF_DriveInReverse				= 1024,
+		
+local DF_StopForCars							= 1,
+local DF_StopForPeds							= 2,
+local DF_SwerveAroundAllCars					= 4,
+local DF_SteerAroundStationaryCars				= 8,
+local DF_SteerAroundPeds						= 16,
+local DF_SteerAroundObjects						= 32,
+local DF_DontSteerAroundPlayerPed				= 64,
+local DF_StopAtLights							= 128,
+local DF_GoOffRoadWhenAvoiding					= 256,
+local DF_DriveIntoOncomingTraffic				= 512,
+local DF_DriveInReverse							= 1024,
 local DF_UseWanderFallbackInsteadOfStraightLine = 2048,
-local DF_AvoidRestrictedAreas			= 4096,
-local DF_PreventBackgroundPathfinding		= 8192,
-local DF_AdjustCruiseSpeedBasedOnRoadSpeed = 16384,
-local DF_UseShortCutLinks				=  262144,
-local DF_ChangeLanesAroundObstructions = 524288,
-local DF_UseSwitchedOffNodes			=  2097152,
-local DF_PreferNavmeshRoute			=  4194304, 
-local DF_PlaneTaxiMode				=  8388608,
-local DF_ForceStraightLine			= 16777216,
-local DF_UseStringPullingAtJunctions	= 33554432,
-local DF_AvoidHighways				= 536870912,
-local DF_ForceJoinInRoadDirection		= 1073741824
+local DF_AvoidRestrictedAreas					= 4096,
+local DF_PreventBackgroundPathfinding			= 8192,
+local DF_AdjustCruiseSpeedBasedOnRoadSpeed		= 16384,
+local DF_UseShortCutLinks						= 262144,
+local DF_ChangeLanesAroundObstructions			= 524288,
+local DF_UseSwitchedOffNodes					=  2097152,
+local DF_PreferNavmeshRoute						=  4194304, 
+local DF_PlaneTaxiMode							=  8388608,
+local DF_ForceStraightLine						= 16777216,
+local DF_UseStringPullingAtJunctions			= 33554432,
+local DF_AvoidHighways							= 536870912,
+local DF_ForceJoinInRoadDirection				= 1073741824
 
-local ECF_RESUME_IF_INTERRUPTED = 1,
-local ECF_WARP_ENTRY_POINT = 2,
-local ECF_JACK_ANYONE = 8,
-local ECF_WARP_PED = 16,
-local ECF_DONT_WAIT_FOR_VEHICLE_TO_STOP = 64,
-local ECF_DONT_CLOSE_DOOR = 256,
-local ECF_WARP_IF_DOOR_IS_BLOCKED = 512,
-local ECF_JUMP_OUT = 4096,
-local ECF_DONT_DEFAULT_WARP_IF_DOOR_BLOCKED = 65536,
-local ECF_USE_LEFT_ENTRY = 131072,
-local ECF_USE_RIGHT_ENTRY = 262144,
-local ECF_JUST_PULL_PED_OUT = 524288,
-local ECF_BLOCK_SEAT_SHUFFLING = 1048576,
-local ECF_WARP_IF_SHUFFLE_LINK_IS_BLOCKED = 4194304,
-local ECF_DONT_JACK_ANYONE = 8388608,
-local ECF_WAIT_FOR_ENTRY_POINT_TO_BE_CLEAR = 16777216
+local ECF_RESUME_IF_INTERRUPTED 				= 1,
+local ECF_WARP_ENTRY_POINT 						= 2,
+local ECF_JACK_ANYONE 							= 8,
+local ECF_WARP_PED 								= 16,
+local ECF_DONT_WAIT_FOR_VEHICLE_TO_STOP 		= 64,
+local ECF_DONT_CLOSE_DOOR						= 256,
+local ECF_WARP_IF_DOOR_IS_BLOCKED 				= 512,
+local ECF_JUMP_OUT 								= 4096,
+local ECF_DONT_DEFAULT_WARP_IF_DOOR_BLOCKED 	= 65536,
+local ECF_USE_LEFT_ENTRY 						= 131072,
+local ECF_USE_RIGHT_ENTRY 						= 262144,
+local ECF_JUST_PULL_PED_OUT 					= 524288,
+local ECF_BLOCK_SEAT_SHUFFLING 					= 1048576,
+local ECF_WARP_IF_SHUFFLE_LINK_IS_BLOCKED 		= 4194304,
+local ECF_DONT_JACK_ANYONE 						= 8388608,
+local ECF_WAIT_FOR_ENTRY_POINT_TO_BE_CLEAR 		= 16777216
 
 local randomPeds = {
 	util.joaat("a_f_y_topless_01"),
@@ -230,7 +266,7 @@ local Necessary_AHK_Settings_On = { -- Don't Forget "," after every Entry
 "Stand>Settings>Session Joining>Check If Join Will Succeed",
 }
 
-local Bot_AHK_Settings_On = { -- This is for Bot Mode. Don't Forget "," after every Entry
+local Bot_AHK_Settings_On = {
 "Self>Movement>Reduced Collision",
 "Self>Immortality",
 "Self>Gracefulness",
@@ -256,7 +292,7 @@ local Bot_AHK_Settings_On = { -- This is for Bot Mode. Don't Forget "," after ev
 "Stand>Lua Scripts>Whitis",
 "Stand>Lua Scripts>Whitis>Script Controller>Script Settings>Enable AHK Controll",
 "Stand>Lua Scripts>Whitis>World>Remove Object Collision",
-"Online>Protections>Disable Turning Into Beast",									-- Stand added it themself so i removed the lua commandref for it and the protection itself (this is the Stand path)
+"Online>Protections>Disable Turning Into Beast",
 "Stand>Lua Scripts>Whitis>Protections>Block Clone Spawns",
 "Stand>Lua Scripts>Whitis>Protections>Jinx | Block Mugger",
 "Stand>Lua Scripts>Whitis>Detections>Modder Detections>Jinx | Orbital Cannon",
@@ -270,14 +306,14 @@ local Bot_AHK_Settings_On = { -- This is for Bot Mode. Don't Forget "," after ev
 "Stand>Lua Scripts>Whitis>Protections>Jinx | Ghost Orbital Cannon",
 }
 
-local Necessary_AHK_Settings_Enabled = { -- Don't Forget "," after every Entry
+local Necessary_AHK_Settings_Enabled = {
 "Online>Protections>Events>Kick Event>Write To Log File",
 "Online>Reactions>Player Join Reactions>Write To Log File",
 "Online>Reactions>RID Join Reactions>Write To Log File",
 "Online>Reactions>Host Change Reactions>Write To Log File",
 }
 
-local Bot_AHK_Settings_Enabled = { -- Don't Forget "," after every Entry
+local Bot_AHK_Settings_Enabled = {
 "Online>Protections>Detections>Modded Explosion>Block",
 "Online>Protections>Events>Apartment Invite>Block",
 "Online>Protections>Events>Trigger Business Raid>Block",
