@@ -249,7 +249,7 @@ local BlackListedVehicles = {}
 local BlackListedVehiclesDestroyOnly = {}
 local PedJackFallback = false
 
-local Necessary_AHK_Settings_On = { -- Don't Forget "," after every Entry
+local Necessary_AHK_Settings_On = {
 "Online>Transitions>Speed Up>Don't Wait For Data Broadcast",
 "Online>Transitions>Speed Up>Don't Wait For Mission Launcher",
 "Online>Transitions>Speed Up>Don't Ask For Permission To Spawn",
