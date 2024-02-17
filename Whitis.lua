@@ -25,11 +25,12 @@ if not status then
 end
 if auto_updater == true then error("Invalid auto-updater lib. Please delete your Stand/Lua Scripts/lib/auto-updater.lua and try again") end
 
-auto_updater.run_auto_update({
-    source_url="" -- Add GitHub Repo :3
+local auto_update_config = {
+    source_url="https://github.com/WhiteCile/WhitisLua/blob/main/Whitis.lua",
     script_relpath=SCRIPT_RELPATH,
-    verify_file_begins_with="--"
-})
+    verify_file_begins_with="--",
+}
+
 auto_updater.run_auto_update(auto_update_config)
 
 
