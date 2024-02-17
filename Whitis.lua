@@ -26,13 +26,12 @@ end
 if auto_updater == true then error("Invalid auto-updater lib. Please delete your Stand/Lua Scripts/lib/auto-updater.lua and try again") end
 
 local auto_update_config = {
-    source_url="https://github.com/WhiteCile/WhitisLua/blob/main/Whitis.lua",
+    source_url="https://raw.githubusercontent.com/WhiteCile/WhitisLua/main/Whitis.lua",
     script_relpath=SCRIPT_RELPATH,
     verify_file_begins_with="--",
 }
 
 auto_updater.run_auto_update(auto_update_config)
-
 
 -----------
 -- Start --
@@ -90,9 +89,9 @@ local DF_PreventBackgroundPathfinding			= 8192,
 local DF_AdjustCruiseSpeedBasedOnRoadSpeed		= 16384,
 local DF_UseShortCutLinks						= 262144,
 local DF_ChangeLanesAroundObstructions			= 524288,
-local DF_UseSwitchedOffNodes					=  2097152,
-local DF_PreferNavmeshRoute						=  4194304, 
-local DF_PlaneTaxiMode							=  8388608,
+local DF_UseSwitchedOffNodes					= 2097152,
+local DF_PreferNavmeshRoute						= 4194304, 
+local DF_PlaneTaxiMode							= 8388608,
 local DF_ForceStraightLine						= 16777216,
 local DF_UseStringPullingAtJunctions			= 33554432,
 local DF_AvoidHighways							= 536870912,
@@ -736,6 +735,94 @@ local function AHKControllShadowRoot()
 	end)
 end
 
+--[[ Yeah idk why but it bugged my Session Browser when attaching it after "More Filters" in Session Browser ... maybe fix this so i can add an Action into the session Browser ^^
+local FindNewSessionRef = menu.action(menu.shadow_root(), "Whitis | Find Session to Host", {"CCLobby"}, "Find a New Session Without someome Spoofing their Host Token \nNote: Close Menu to Stop searching :)", function()
+	
+----Getting RegionFilter to make string.match possible (Doing this so we can Filter the Sessions out, so we're not detecting anything else but the sessions... for example = Going through the get_children list, will list even the Settings, so we Filter them out)
+	local RegionSearch = menu.get_state(menu.ref_by_path("Online>Session Browser>Region")) .. "; "
+
+----Check if RegionFilter is Valid
+	if string.match(RegionSearch, "Don't") then
+		util.toast("Pick a Region Filter First")
+		return
+	end
+
+----Refresh Session List
+	menu.focus(menu.ref_by_path("Online>Session Browser>Refresh")) -- Using Focus bec the Session Browser Doesn't Update without being in the List
+	menu.trigger_command(menu.ref_by_path("Online>Session Browser>Refresh"))
+	
+----Wait until Session List is Cleared (Doing this so the List we're getting through isn't Outdated)
+	local SessionsLoaded = true
+	local WaitingIndex = 0
+	util.toast("Reloading your Browser List, this could take a few sec...")
+	repeat
+		WaitingIndex = WaitingIndex +1
+		SessionsLoaded = false
+		for menu.get_children(menu.ref_by_path("Online>Session Browser")) as Sessions do
+			if menu.is_ref_valid(Sessions) then
+				if string.match(menu.get_menu_name(Sessions), RegionSearch) then --Every Session Label will have "Region; " in it so were just searching those Labels. For Example = "Europe; 27 Players"
+					SessionsLoaded = true										 --																	   This is the Region Filter ---> ^^^^^^ <---
+					break
+				end
+			end
+			util.yield()
+		end
+		util.yield()
+	until not SessionsLoaded or WaitingIndex == 100
+	if SessionsLoaded then
+		util.toast("Waited too long for List to Clear")
+		return
+	end
+		
+----Wait for new Sessions to appear in the list 
+	SessionsLoaded = false
+	WaitingIndex = 0
+	repeat
+		WaitingIndex = WaitingIndex +1
+		for menu.get_children(menu.ref_by_path("Online>Session Browser")) as Sessions do
+			if string.match(menu.get_menu_name(Sessions), RegionSearch) then --Every Session Label will have "Region; " in it so were just searching those Labels. For Example = "Europe; 27 Players"
+				SessionsLoaded = true										 --																	   This is the Region Filter ---> ^^^^^^ <---
+				break
+			end
+			util.yield()
+		end
+		util.yield()
+	until SessionsLoaded or WaitingIndex == 1000
+	if not SessionsLoaded then
+		util.toast("Session Load Timeout")
+		return
+	end
+	util.toast("Sessions Loaded, checking for a good Lobby :)")
+
+----Searching for a Session Without a Spoofed Host Token
+	local SessionFound = false
+	local SessionIndex = 0
+	repeat
+		for i, Sessions in ipairs(menu.get_children(menu.ref_by_path("Online>Session Browser"))) do
+			if not menu.is_open() then
+				local LoopingSessions = false
+				util.toast("User Stopped Searching :O")
+				return
+			end
+			if (SessionIndex < i) then
+				--util.toast("S=" .. SessionIndex .. " i=" .. i .. "") -- Debug
+				SessionIndex = SessionIndex +1
+				if string.match(menu.get_menu_name(Sessions), RegionSearch) and menu.is_ref_valid(Sessions) then --Every Session Label will have "Region; " in it so we're just searching those Labels. For Example = "Europe; 27 Players"
+					if CheckSession(Sessions) then
+						return
+					end
+					
+				end
+			end
+			util.yield()
+		end
+		menu.focus(menu.ref_by_path("Online>Session Browser>Refresh")) --Using Focus Again to Load More Sessions to Scan
+		util.toast("Waiting for more Sessions to Load...")
+		util.yield(100)
+	until SessionFound
+end)
+menu.attach_after(menu.ref_by_path("Online>Session Browser>More Filters"), FindNewSessionRef)
+--]]
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------
