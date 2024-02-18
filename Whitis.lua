@@ -54,7 +54,7 @@ local Credits = menu.list(menu.my_root(), "Credits", {""}, "")
 menu.divider(Credits, "Coders")
 ---------------------------------------------------------------------------------
 menu.action(Credits, "WhiteCile", {}, "That's Me :O", function() end)
-menu.action(Credits, "Lea__666", {}, "Blacklist and Code Sharing :)", function() end)
+menu.action(Credits, "Asuka", {}, "Blacklist and Code Sharing :)", function() end)
 ---------------------------------------------------------------------------------
 menu.divider(Credits, "Great Supporters <3")
 ---------------------------------------------------------------------------------
@@ -324,6 +324,7 @@ local Bot_AHK_Settings_Enabled = {
 "Online>Protections>Events>Kick From Interior>Write To Log File",
 "Online>Chat>Bypass Profanity Filter",
 "Online>Chat>Bypass Character Filter",
+"Online>Reactions>Love Letter Kick Reactions>Block",
 }
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -735,6 +736,12 @@ local function AHKControllShadowRoot()
 	end)
 end
 
+
+
+
+
+
+
 --[[ Yeah idk why but it bugged my Session Browser when attaching it after "More Filters" in Session Browser ... maybe fix this so i can add an Action into the session Browser ^^
 local FindNewSessionRef = menu.action(menu.shadow_root(), "Whitis | Find Session to Host", {"CCLobby"}, "Find a New Session Without someome Spoofing their Host Token \nNote: Close Menu to Stop searching :)", function()
 	
@@ -972,7 +979,6 @@ menu.toggle(ScriptSettings_Menu, "Apply Bot Settings", {""}, "This will Change s
 		end
 		
 		menu.set_state(menu.ref_by_path("Online>Protections>Detections>Classifications>Modder>Write To Log File"), "Strangers")
-		menu.set_state(menu.ref_by_path("Online>Reactions>Love Letter Kick Reactions>Block"), "Strangers")
 		menu.set_state(menu.ref_by_path("Online>Protections>Events>Vehicle Takeover>Block"), "Strangers")
 	end
 end)
