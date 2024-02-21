@@ -836,7 +836,7 @@ menu.attach_after(menu.ref_by_path("Online>Session Browser>More Filters"), FindN
 -- AHK Settings --
 ------------------
 
-local ScriptMode = Friend --Pre Define Script RunMode
+local ScriptMode = "Friend" --Pre Define Script RunMode
 local ScriptModes = {
 "Friend",
 "CoLoadAHK",
