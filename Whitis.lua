@@ -962,6 +962,7 @@ menu.toggle(ScriptSettings_Menu, "Apply Client Settings", {""}, "This will Chang
 		end
 		menu.set_state(menu.ref_by_path("Online>Protections>Detections>Classifications>Modder>Write To Log File"), "Strangers")
 		menu.set_state(menu.ref_by_path("Online>Reactions>Script Host Change Reactions>Write To Log File"), "Strangers")
+		menu.set_state(menu.ref_by_path("Online>Transitions>Join Group Override"), "Spectator")
 	end
 end)
 
@@ -978,6 +979,7 @@ menu.toggle(ScriptSettings_Menu, "Apply Bot Settings", {""}, "This will Change s
 		menu.set_state(menu.ref_by_path("Online>Protections>Detections>Classifications>Modder>Write To Log File"), "Strangers")
 		menu.set_state(menu.ref_by_path("Online>Protections>Events>Vehicle Takeover>Block"), "Strangers")
 		menu.set_state(menu.ref_by_path("Online>Protections>Host-Controlled Kicks>Love Letter Lube"), "Aggressive")
+		menu.set_state(menu.ref_by_path("Online>Transitions>Join Group Override"), "Spectator")
 	end
 end)
 
