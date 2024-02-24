@@ -739,9 +739,6 @@ end
 
 
 
-
-
-
 --[[ Yeah idk why but it bugged my Session Browser when attaching it after "More Filters" in Session Browser ... maybe fix this so i can add an Action into the session Browser ^^
 local FindNewSessionRef = menu.action(menu.shadow_root(), "Whitis | Find Session to Host", {"CCLobby"}, "Find a New Session Without someome Spoofing their Host Token \nNote: Close Menu to Stop searching :)", function()
 	
@@ -980,6 +977,7 @@ menu.toggle(ScriptSettings_Menu, "Apply Bot Settings", {""}, "This will Change s
 		
 		menu.set_state(menu.ref_by_path("Online>Protections>Detections>Classifications>Modder>Write To Log File"), "Strangers")
 		menu.set_state(menu.ref_by_path("Online>Protections>Events>Vehicle Takeover>Block"), "Strangers")
+		menu.set_state(menu.ref_by_path("Online>Protections>Host-Controlled Kicks>Love Letter Lube"), "Aggressive")
 	end
 end)
 
