@@ -645,6 +645,10 @@ local function HandleBlackListedVehList(VehicleHandle, on_toggle, DestroyOnly) -
 end
 
 local function LuaRemote_OnOFF(toggled, CmdRef) -- Remotes the CMDRef On or Off -> Depending on the toggled state (True/False)
+	if not menu.is_ref_valid(menu.ref_by_path(CmdRef)) then
+		util.toast("Whitis: Unable to Find Remote Controll Ref... there might be a missing lua or it got updated? (Issue: " .. CmdRef .. ")")
+		return
+	end
 	if toggled then
 		menu.set_state(menu.ref_by_path(CmdRef), "On")
 		return
