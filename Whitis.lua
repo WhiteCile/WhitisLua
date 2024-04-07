@@ -279,7 +279,6 @@ local Bot_AHK_Settings_On = {
 "Online>Protections>Block Blaming",
 "Online>Protections>Block Entity Spam>Automatically Use Anti-Crash Cam",
 "Online>Spoofing>Host Token Spoofing>Host Token Spoofing",
-"Online>Spoofing>Host Token Spoofing>Kick Host When Joining As Next In Queue>Kick Host When Joining As Next In Queue",
 "Online>Spoofing>Hide From Player List",
 "Online>Off The Radar",
 "World>Inhabitants>Clear Area>No Delay",
@@ -471,7 +470,7 @@ local function IsTokenSpooferInLobby(Sessions) --Check if someone inside the Lob
 		util.yield()
 		if menu.is_ref_valid(PlayerList) then --Check if CMDRef is still Valid Bec some RID's might be Changed into the Actual name of the Player
 			local PlayerInfo = menu.get_help_text(PlayerList)
-			if PlayerInfo != "" and string.sub(string.sub(PlayerInfo, (string.find(PlayerInfo,"\n",7)+13)), 0, 2) == "00" then	-- Detect if the Current Player we're Looping through is a HostToken Spoofer
+			if PlayerInfo != "" and PlayerInfo != -70724937 and string.sub(string.sub(PlayerInfo, (string.find(PlayerInfo,"\n",7)+13)), 0, 2) == "00" then	-- Detect if the Current Player we're Looping through is a HostToken Spoofer
 				util.toast("TokenSpoofer :O")
 				return true
 			end
@@ -1366,10 +1365,6 @@ menu.toggle(Modder_Detection_Menu, "Jinx | Spawned Vehicle", {}, "Detects if som
 	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Spawned Vehicle")
 end)
 
-menu.toggle(Modder_Detection_Menu, "Jinx | Modded License Plate", {}, "Detects people with a modded license plate.", function(toggled)
-	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Modded License Plate")
-end)
-
 menu.toggle(Modder_Detection_Menu, "Jinx | Teleport", {}, "Detects if a player teleports onto you.", function(toggled)
 	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Teleport")
 end)
@@ -1386,20 +1381,8 @@ menu.toggle(Modder_Detection_Menu, "Jinx | Anti-Lockon", {}, "Detects players us
 	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Anti-Lockon")
 end)
 
-menu.toggle(Modder_Detection_Menu, "Jinx | Modified Vehicle Speed", {}, "Detects people who have modified their engine power or top speed.", function(toggled)
-	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Modified Vehicle Speed")
-end)
-
 menu.toggle(Modder_Detection_Menu, "Jinx | Modded Vehicle Upgrade", {}, "Detects players who have modded their own or someone elses vehicles outside of a shop.", function(toggled)
 	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Modded Vehicle Upgrade")
-end)
-
-menu.toggle(Modder_Detection_Menu, "Jinx | Modded Vehicle Repair", {}, "", function(toggled)
-	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Modded Vehicle Repair")
-end)
-
-menu.toggle(Modder_Detection_Menu, "Jinx | Modded Script Host Migration", {}, "Detects people who give script host to another player or took script host while still in a transition.", function(toggled)
-	LuaRemote_OnOFF(toggled, "Stand>Lua Scripts>JinxScript>Detections>Modder Detections>Modded Script Host Migration")
 end)
 
 menu.toggle(Modder_Detection_Menu, "Jinx | 2Take1 User", {}, "Detects people using 2Take1. (Note: player must be in a vehicle spawned by them)", function(toggled)
