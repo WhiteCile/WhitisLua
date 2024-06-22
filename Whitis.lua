@@ -488,7 +488,7 @@ local function IsPlayerListLoaded(Sessions) --Wait for PlayerList to Load
 			util.toast("Can't join this Lobby")
 		end
 		for menu.get_children(Sessions) as PlayerList do
-			if menu.is_ref_valid(PlayerList) and string.match(lang.get_string(menu.get_menu_name(PlayerList)), "/32") then
+			if menu.is_ref_valid(PlayerList) and string.match(lang.get_string(menu.get_menu_name(PlayerList)), "/27") then
 				util.yield(600)
 				return true
 			end
