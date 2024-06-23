@@ -481,21 +481,33 @@ end
 
 local function IsPlayerListLoaded(Sessions) --Wait for PlayerList to Load
 	local PlayerListTimeout = 0
-	local PlayerListLoaded = false
-	repeat
+	local ChildCount = 0
+	while true do
 		PlayerListTimeout = PlayerListTimeout +1
 		if PlayerListTimeout == 30 then
 			util.toast("Can't join this Lobby")
+			return false
 		end
 		for menu.get_children(Sessions) as PlayerList do
 			if menu.is_ref_valid(PlayerList) and string.match(lang.get_string(menu.get_menu_name(PlayerList)), "/27") then
 				util.yield(600)
-				return true
+				while true do
+					ChildCount = 0
+					for menu.get_children(Sessions) as PlayerList do
+						ChildCount = ChildCount + 1
+					end
+					if ChildCount > 5 then return true end
+					if PlayerListTimeout == 30 then
+						util.toast("Can't join this Lobby")
+						return false
+					end
+					util.yield(100)
+					PlayerListTimeout = PlayerListTimeout +1
+				end
 			end
-		util.yield()
 		end
 	util.yield()
-	until PlayerListLoaded
+	end
 end
 
 local function CheckSessionPlayerList(Sessions) --Check the PlayerList
