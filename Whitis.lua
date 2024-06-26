@@ -489,7 +489,7 @@ local function IsPlayerListLoaded(Sessions) --Wait for PlayerList to Load
 			return false
 		end
 		for menu.get_children(Sessions) as PlayerList do
-			if menu.is_ref_valid(PlayerList) and string.match(lang.get_string(menu.get_menu_name(PlayerList)), "/27") then
+			if menu.is_ref_valid(PlayerList) and string.match(lang.get_string(menu.get_menu_name(PlayerList)), "/32") then
 				util.yield(600)
 				while true do
 					ChildCount = 0
